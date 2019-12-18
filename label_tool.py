@@ -63,29 +63,34 @@ MULTITASK_NUM = 5
 #                           "T恤",    "POLO衫", "针织衫", "马甲", "吊带", "卫衣",
 #                           "雪纺衫", "连衣裙", "半身裙", "打底裤", "休闲裤", "牛仔裤",
 #                           "短裤",   "运动裤", "无"]
-OptionsClothesStyle    = ["wind coat",   "woolen coat", "knitted sweater", "down jacket", "small suit", "west suit",
-                          "jacket",   "cheongsam", "leather", "fur", "wedding", "shirt",
-                          "T shirt",    "POLO shirt", "knitwear", "vest", "gallus", "hoodie",
-                          "chiffon shirt", "one-piece", "skirt", "leggings", "casual pants", "jeans",
-                          "shorts",   "slacks", "None"]
-
+# OptionsClothesStyle    = ["wind coat",   "woolen coat", "knitted sweater", "down jacket", "small suit", "west suit",
+#                           "jacket",   "cheongsam", "leather", "fur", "wedding", "shirt",
+#                           "T shirt",    "POLO shirt", "knitwear", "vest", "gallus", "hoodie",
+#                           "chiffon shirt", "one-piece", "skirt", "leggings", "casual pants", "jeans",
+#                           "shorts",   "slacks", "None"]
+OptionsClothesStyle = ['NP','P','None']
 # OptionsClothesColor    = ["黑色", "蓝色", "棕色", "灰色", "绿色", "橙色",
 #                           "粉色", "紫色", "红色", "白色", "黄色", "无"]
-OptionsClothesColor    = ["black", "blue", "blown", "gray", "green", "orange",
-                          "pink", "purple", "red", "white", "yellow", "None"]
+OptionsClothesColor    = ['NF','F','None']
+    # ["black", "blue", "blown", "gray", "green", "orange",
+    #                       "pink", "purple", "red", "white", "yellow", "None"]
 
 # OptionsCClothesTexture = ["纯色", "横条纹", "纵条纹", "格子", "圆点", "乱花",
 #                           "LOGO", "其他", "无"]
-OptionsCClothesTexture = ["solid", "horizon", "vertical", "grid", "dot", "paisley",
-                          "LOGO", "else", "None"]
+OptionsCClothesTexture = ['NS','S','None']
+
+    # ["solid", "horizon", "vertical", "grid", "dot", "paisley",
+    #                       "LOGO", "else", "None"]
 
 # OptionsClothesNeckline = ["圆领", "V领", "翻领", "立领", "毛领", "西装领",
 #                           "连毛领", "其他", "None"]
-OptionsClothesNeckline = ["round neck", "V neck", "lapel neck", "stand neck", "feather neck", "suit neck",
-                          "collars neck", "else", "None"]
+OptionsClothesNeckline = ['NT','T','None']
+    # ["round neck", "V neck", "lapel neck", "stand neck", "feather neck", "suit neck",
+    #                       "collars neck", "else", "None"]
 
 # OptionsClothesSleeve   = ["短袖", "中袖", "长袖", "无袖", "无"]
-OptionsClothesSleeve   = ["short", "middle", "long", "sleeveless", "None"]
+OptionsClothesSleeve   =['NO','O','None']
+    # ["short", "middle", "long", "sleeveless", "None"]
 
 
 class LabelTool():
@@ -222,17 +227,18 @@ class LabelTool():
             self.parent.focus()
             self.category = str(img_folder)
         else:
-            img_folder = r'D:\workspace\python\labelGUI'
+            img_folder = r'/media/xwj/xwjdata/Skin/raw/2018-02-22' #todo
 
         # get image list
-        self.imageDir  = os.path.join(r'./JPEGImages', '%s' % (self.category))
+        # self.imageDir  = os.path.join(r'./JPEGImages', '%s' % (self.category))
+        self.imageDir = r'/media/xwj/xwjdata/Skin/raw/2018-02-22'  # todo image dir
         self.imageList = glob.glob(os.path.join(self.imageDir, '*.jpg'))    # with the specified exts
         if len(self.imageList) == 0:
             print 'No .JPEG images found in the specified dir!'
             return
 
         # set up output dir
-        self.outDir = os.path.join(r'./Labels', '%s' % (self.category))
+        self.outDir = os.path.join(r'./Skin', '%s' % (self.category))
         if not os.path.exists(self.outDir):
             os.mkdir(self.outDir)
 
@@ -282,9 +288,10 @@ class LabelTool():
         # load image
         imagepath = self.imageList[self.cur - 1]
         self.img = Image.open(imagepath)
+        self.img =  self.img.resize((800, 800), Image.ANTIALIAS) #todo
         self.imgSize = self.img.size
         self.tkimg = ImageTk.PhotoImage(self.img)
-        self.mainPanel.config(width=max(self.tkimg.width(), 100), height=max(self.tkimg.height(), 100))   # for the gui size
+        self.mainPanel.config(width=max(self.tkimg.width(), 500), height=max(self.tkimg.height(), 500))   # for the gui size
         self.mainPanel.create_image(0, 0, image=self.tkimg, anchor=NW)
         self.progLabel.config(text="%04d/%04d" % (self.cur, self.total))
 
