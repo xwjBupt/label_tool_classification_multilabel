@@ -55,7 +55,7 @@ COLORS = ['red', 'blue', 'yellow', 'pink', 'cyan', 'green', 'black']
 
 # image sizes for the examples, but never use
 SIZE          = 256, 256
-INVALID       = -1
+INVALID       = 0 #todo 0 represents no problem
 MULTITASK_NUM = 5
 
 # OptionsClothesStyle    = ["风衣",   "毛呢大衣", "羊毛衫", "羽绒服", "小西装", "西装套装",
@@ -68,28 +68,28 @@ MULTITASK_NUM = 5
 #                           "T shirt",    "POLO shirt", "knitwear", "vest", "gallus", "hoodie",
 #                           "chiffon shirt", "one-piece", "skirt", "leggings", "casual pants", "jeans",
 #                           "shorts",   "slacks", "None"]
-OptionsClothesStyle = ['NP','P','None']
+OptionsClothesStyle = ['NoSesu','Pix']
 # OptionsClothesColor    = ["黑色", "蓝色", "棕色", "灰色", "绿色", "橙色",
 #                           "粉色", "紫色", "红色", "白色", "黄色", "无"]
-OptionsClothesColor    = ['NF','F','None']
+OptionsClothesColor    = ['NoFollicular','Follicular']
     # ["black", "blue", "blown", "gray", "green", "orange",
     #                       "pink", "purple", "red", "white", "yellow", "None"]
 
 # OptionsCClothesTexture = ["纯色", "横条纹", "纵条纹", "格子", "圆点", "乱花",
 #                           "LOGO", "其他", "无"]
-OptionsCClothesTexture = ['NS','S','None']
+OptionsCClothesTexture = ['NoSensitive','Sensitive']
 
     # ["solid", "horizon", "vertical", "grid", "dot", "paisley",
     #                       "LOGO", "else", "None"]
 
 # OptionsClothesNeckline = ["圆领", "V领", "翻领", "立领", "毛领", "西装领",
 #                           "连毛领", "其他", "None"]
-OptionsClothesNeckline = ['NT','T','None']
+OptionsClothesNeckline = ['NoTexture','Texture']
     # ["round neck", "V neck", "lapel neck", "stand neck", "feather neck", "suit neck",
     #                       "collars neck", "else", "None"]
 
 # OptionsClothesSleeve   = ["短袖", "中袖", "长袖", "无袖", "无"]
-OptionsClothesSleeve   =['NO','O','None']
+OptionsClothesSleeve   =['NoOil','Oil']
     # ["short", "middle", "long", "sleeveless", "None"]
 
 
@@ -144,11 +144,11 @@ class LabelTool():
         self.variableClothesNeckline = StringVar()
         self.variableClothesSleeve = StringVar()
 
-        self.variableClothesStyle.set(OptionsClothesStyle[len(OptionsClothesStyle) - 1])  # set default as none
-        self.variableClothesColor.set(OptionsClothesColor[len(OptionsClothesColor) - 1])  # set default as none
-        self.variableClothesTexture.set(OptionsCClothesTexture[len(OptionsCClothesTexture) - 1])  # set default as none
-        self.variableClothesNeckline.set(OptionsClothesNeckline[len(OptionsClothesNeckline) - 1])  # set default as none
-        self.variableClothesSleeve.set(OptionsClothesSleeve[len(OptionsClothesSleeve) - 1])  # set default as none
+        self.variableClothesStyle.set(OptionsClothesStyle[0])  # Todo: change according to the split set
+        self.variableClothesColor.set(OptionsClothesColor[0])  # set default as none
+        self.variableClothesTexture.set(OptionsCClothesTexture[0])  # set default as none
+        self.variableClothesNeckline.set(OptionsClothesNeckline[0])  # set default as none
+        self.variableClothesSleeve.set(OptionsClothesSleeve[0])  # set default as none
 
         # multilabel labelling
         self.multilabel = Label(self.frame, text="MultiLabel: ")
@@ -276,11 +276,11 @@ class LabelTool():
 
     def resetOptionMenu(self):
         # reset the label to default label
-        self.variableClothesStyle.set(OptionsClothesStyle[len(OptionsClothesStyle) - 1])  # set default as none
-        self.variableClothesColor.set(OptionsClothesColor[len(OptionsClothesColor) - 1])  # set default as none
-        self.variableClothesTexture.set(OptionsCClothesTexture[len(OptionsCClothesTexture) - 1])  # set default as none
-        self.variableClothesNeckline.set(OptionsClothesNeckline[len(OptionsClothesNeckline) - 1])  # set default as none
-        self.variableClothesSleeve.set(OptionsClothesSleeve[len(OptionsClothesSleeve) - 1])  # set default as none
+        self.variableClothesStyle.set(OptionsClothesStyle[0])  # set default as none
+        self.variableClothesColor.set(OptionsClothesColor[0])  # set default as none
+        self.variableClothesTexture.set(OptionsCClothesTexture[0])  # set default as none
+        self.variableClothesNeckline.set(OptionsClothesNeckline[0])  # set default as none
+        self.variableClothesSleeve.set(OptionsClothesSleeve[0])  # set default as none
 
 
     def loadImage(self):
@@ -288,7 +288,7 @@ class LabelTool():
         # load image
         imagepath = self.imageList[self.cur - 1]
         self.img = Image.open(imagepath)
-        self.img =  self.img.resize((800, 800), Image.ANTIALIAS) #todo
+        self.img =  self.img.resize((1000, 800), Image.ANTIALIAS) #todo
         self.imgSize = self.img.size
         self.tkimg = ImageTk.PhotoImage(self.img)
         self.mainPanel.config(width=max(self.tkimg.width(), 500), height=max(self.tkimg.height(), 500))   # for the gui size
@@ -340,25 +340,25 @@ class LabelTool():
         idxSleeve   = self.getIndex(self.variableClothesSleeve.get(), OptionsClothesSleeve)
 
         # valid check
-        if (not self.checkLabelValid(idxStyles, len(OptionsClothesStyle))):
-            showerror("Error", "Invalid None label in ClothesStyle")
-            return False
+        # if (not self.checkLabelValid(idxStyles, len(OptionsClothesStyle))):
+        #     showerror("Error", "Invalid None label in ClothesStyle")
+        #     return False
+        #
+        # if (not self.checkLabelValid(idxColor, len(OptionsClothesColor))):
+        #     showerror("Error", "Invalid None label in ClothesColor")
+        #     return False
+        #
+        # if (not self.checkLabelValid(idxTexture, len(OptionsCClothesTexture))):
+        #     showerror("Error", "Invalid None label in ClothesTexture")
+        #     return False
 
-        if (not self.checkLabelValid(idxColor, len(OptionsClothesColor))):
-            showerror("Error", "Invalid None label in ClothesColor")
-            return False
-
-        if (not self.checkLabelValid(idxTexture, len(OptionsCClothesTexture))):
-            showerror("Error", "Invalid None label in ClothesTexture")
-            return False
-
-        if (not self.checkLabelValid(idxNeckline, len(OptionsClothesNeckline))):
-            showerror("Error", "Invalid None label in ClothesNeckline")
-            return False
-
-        if (not self.checkLabelValid(idxSleeve, len(OptionsClothesSleeve))):
-            showerror("Error", "Invalid None label in ClothesSleeve")
-            return False
+        # if (not self.checkLabelValid(idxNeckline, len(OptionsClothesNeckline))):
+        #     showerror("Error", "Invalid None label in ClothesNeckline")
+        #     return False
+        #
+        # if (not self.checkLabelValid(idxSleeve, len(OptionsClothesSleeve))):
+        #     showerror("Error", "Invalid None label in ClothesSleeve")
+        #     return False
 
         imagepath = self.imageList[self.cur - 1]
         imageRelativePath = os.path.join(self.category.strip(), os.path.split(imagepath)[-1])
